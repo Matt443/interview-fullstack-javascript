@@ -1,15 +1,11 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-import "./App.css";
 import Button from "@mui/material/Button";
+import TopBar from "./components/TopBar.component";
 
 function App() {
-    // const [count, setCount] = useState(0)
-
     return (
         <>
-            <div className="text-bold m-2">TEST</div>
+            <TopBar></TopBar>
+            <div className="text-green-800 m-2">TEST</div>
             <Button variant="contained">Hello world</Button>
         </>
     );
