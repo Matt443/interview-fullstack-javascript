@@ -1,22 +1,29 @@
-import Button from "@mui/material/Button";
 import TopBar from "./components/TopBar.component";
-import { useSelector, useDispatch } from "react-redux";
-import { increment, decrement } from "./features/counterSlice.feature";
+import { useLazyGetAllCitiesQuery, useLazyGetCitiesQuery } from "./features/ApiSlice.feature";
+import { useSelector } from "react-redux";
 import { RootState } from "./stores/state.store";
+import { useEffect } from "react";
 
 function App() {
-    const count = useSelector((state: RootState) => state.counter.value);
-    const dispatch = useDispatch();
+    const [loadCities, { data: cities }] = useLazyGetCitiesQuery();
+    const [loadAllCities, { data: allCities }] = useLazyGetAllCitiesQuery();
+    const inputValue = useSelector((state: RootState) => state.data.searchedFor);
+    useEffect(() => {
+        loadAllCities();
+    }, [loadAllCities]);
     return (
         <>
-            <TopBar></TopBar>
-            <div className="text-green-800 m-2">TEST</div>
-            <Button variant="contained">Hello world</Button>
-            <div>
-                <p>Count: {count}</p>
-                <button onClick={() => dispatch(increment())}>+</button>
-                <button onClick={() => dispatch(decrement())}>-</button>
-            </div>
+            <TopBar
+                searchCallback={() => loadCities({ name: inputValue })}
+                cities={Array.isArray(allCities) ? allCities.map((item) => item.name) : []}
+            ></TopBar>
+            <ul className="text-white">
+                {cities?.map((user) => (
+                    <li className="text-green" key={user.name}>
+                        {user.name}
+                    </li>
+                ))}
+            </ul>
         </>
     );
 }

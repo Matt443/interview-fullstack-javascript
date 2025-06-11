@@ -1,4 +1,5 @@
 export interface CitySearchProps {
-    cities: string[];
     classes?: string;
+    cities: string[];
+    searchCallback: (query: string) => void;
 }

@@ -1,17 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const counterSlice = createSlice({
-    name: "counter",
-    initialState: { value: 0 } as { value: number },
+    name: "cities",
+    initialState: { available: ["The Godfather", "Pulp Fiction"], searchedFor: "" } as {
+        available: string[];
+        searchedFor: string;
+    },
     reducers: {
-        increment: (state) => {
-            state.value += 1;
-        },
-        decrement: (state) => {
-            state.value -= 1;
+        setSearchedFor: (state, action: PayloadAction<string | null>) => {
+            state.searchedFor = action.payload ? action.payload : "";
         },
     },
 });
 
-export const { increment, decrement } = counterSlice.actions;
+export const { setSearchedFor } = counterSlice.actions;
 export default counterSlice.reducer;

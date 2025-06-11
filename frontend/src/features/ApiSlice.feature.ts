@@ -4,10 +4,18 @@ export const apiSlice = createApi({
     reducerPath: "api",
     baseQuery: fetchBaseQuery({ baseUrl: "https://jsonplaceholder.typicode.com" }),
     endpoints: (builder) => ({
-        getUsers: builder.query<{ id: number; name: string }[], void>({
-            query: () => "/users",
+        getCities: builder.query<{ name: string }[], { name: string }>({
+            query: ({ name }) => ({
+                url: "/users",
+                params: { name },
+            }),
+        }),
+        getAllCities: builder.query<{ name: string }[], void>({
+            query: () => ({
+                url: "/users",
+            }),
         }),
     }),
 });
 
-export const { useGetUsersQuery } = apiSlice;
+export const { useLazyGetCitiesQuery, useLazyGetAllCitiesQuery } = apiSlice;
