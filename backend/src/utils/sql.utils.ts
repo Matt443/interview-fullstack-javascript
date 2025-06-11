@@ -1,12 +1,25 @@
 interface WhereGenerator {
     columnName: string;
-    operator: "=" | "<>" | ">" | "<" | ">=" | "<=";
-    suffix: "OR" | "AND";
+    operator: "=" | "<>" | ">" | "<" | ">=" | "<=" | "LIKE";
+    suffix: "OR" | "AND" | "";
 }
 
-export function sqlWhereGenator(config: Array<WhereGenerator>) {
-    return config.forEach(
+/**
+ *
+ * @param {WhereGenerator[]} config
+ * @param {string} prefix
+ * @param {string} suffix
+ * @returns {string}
+ */
+export function sqlWhereGenator(
+    config: Array<WhereGenerator>,
+    prefix: string = "",
+    suffix: string = "",
+): string {
+    let query: string = ` ${prefix} WHERE`;
+    config.forEach(
         (element: WhereGenerator, index: number) =>
-            ` ${element.columnName}${element.operator}$${index} ${element.suffix}`,
+            (query += ` ${element.columnName} ${element.operator} $${index + 1} ${element.suffix}`),
     );
+    return (query += ` ${suffix}`);
 }
