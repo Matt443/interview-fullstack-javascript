@@ -80,41 +80,41 @@ export function doubleFunctionValidation(array1: Array<boolean>, array2: Array<b
  * @param {string} name
  * @param {string} count
  * @param {"search" | "insert"} validationType
- * @returns {boolean}
+ * @returns {{result: boolean, queryValidation: boolean[]}}
  */
 export function cityValidation(
     name: string,
     count: string,
     id: string = "",
     validationType: "search" | "insert" = "search",
-): boolean {
+): { result: boolean; queryValidation: boolean[] } {
     const queryLengths: number[] = [name.length, count.length, id.length];
 
     const lengthsValidation: boolean[] = queryLengths.map((element: number) =>
         isInRange(element, 0, 0),
     );
     const queryValidation: boolean[] = [
-        !validationWithRegex(name, /^[A-Za-z]+$/),
-        !validationWithRegex(count, /^[0-9]+$/),
-        !validationUUID(id),
+        validationWithRegex(name, /^[A-Za-z]+$/),
+        validationWithRegex(count, /^[0-9]+$/),
+        validationUUID(id),
     ];
 
     if (
         validationType === "search" &&
         everyValidation(queryLengths, (element: number) => isInRange(element, 0, 0))
     )
-        return true;
+        return { result: true, queryValidation };
     else if (
-        validationType !== "insert" &&
+        validationType === "search" &&
         doubleFunctionValidation(lengthsValidation, queryValidation)
     )
-        return false;
+        return { result: true, queryValidation };
     else if (
-        !validationWithRegex(name, /^[A-Za-z]+$/) ||
-        !validationWithRegex(count, /^[0-9]+$/) ||
-        !validationUUID(id)
+        validationWithRegex(name, /^[A-Za-z]+$/) &&
+        validationWithRegex(count, /^[0-9]+$/) &&
+        validationUUID(id)
     )
-        return false;
+        return { result: true, queryValidation };
 
-    return true;
+    return { result: false, queryValidation };
 }
