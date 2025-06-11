@@ -1,4 +1,4 @@
-import { City } from "../types/city.type";
+import { CitySearchQuery } from "../types/api.type";
 
 /**
  * Checks if certain param was given
@@ -8,8 +8,8 @@ import { City } from "../types/city.type";
  * @returns {string|false} - returns param value or false if param is not given, if default value is given and param is not given returns default value
  */
 export function getQueryParam(
-    query: City,
-    paramName: keyof City,
+    query: CitySearchQuery,
+    paramName: keyof CitySearchQuery,
     defaultValue: string | undefined = undefined,
 ): string | false | Array<any> | object {
     const param = query[paramName] as string;

@@ -84,18 +84,20 @@ export function doubleFunctionValidation(array1: Array<boolean>, array2: Array<b
  */
 export function cityValidation(
     name: string,
-    count: string,
+    min: string,
+    max: string,
     id: string = "",
     validationType: "search" | "insert" = "search",
 ): { result: boolean; queryValidation: boolean[] } {
-    const queryLengths: number[] = [name.length, count.length, id.length];
+    const queryLengths: number[] = [name.length, min.length, max.length, id.length];
 
     const lengthsValidation: boolean[] = queryLengths.map((element: number) =>
         isInRange(element, 0, 0),
     );
     const queryValidation: boolean[] = [
         validationWithRegex(name, /^[A-Za-z]+$/),
-        validationWithRegex(count, /^[0-9]+$/),
+        validationWithRegex(min, /^[0-9]+$/),
+        validationWithRegex(max, /^[0-9]+$/),
         validationUUID(id),
     ];
 
@@ -109,11 +111,7 @@ export function cityValidation(
         doubleFunctionValidation(lengthsValidation, queryValidation)
     )
         return { result: true, queryValidation };
-    else if (
-        validationWithRegex(name, /^[A-Za-z]+$/) &&
-        validationWithRegex(count, /^[0-9]+$/) &&
-        validationUUID(id)
-    )
+    else if (everyValidation(queryValidation, (element: boolean) => element))
         return { result: true, queryValidation };
 
     return { result: false, queryValidation };
