@@ -111,6 +111,14 @@ export function cityValidation(
         doubleFunctionValidation(lengthsValidation, queryValidation)
     )
         return { result: true, queryValidation };
+    else if (
+        validationType === "insert" &&
+        id.length === 0 &&
+        validationWithRegex(name, /^[A-Za-z]+$/) &&
+        validationWithRegex(min, /^[0-9]+$/) &&
+        validationWithRegex(max, /^[0-9]+$/)
+    )
+        return { result: true, queryValidation };
     else if (everyValidation(queryValidation, (element: boolean) => element))
         return { result: true, queryValidation };
 

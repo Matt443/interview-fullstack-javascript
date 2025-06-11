@@ -18,4 +18,5 @@ export default {
             sendError(res, 500, "Server Error");
         }
     },
+    async insertCities(req: Request, res: Response, next: NextFunction) {},
 };
