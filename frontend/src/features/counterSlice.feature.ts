@@ -7,10 +7,14 @@ const counterSlice = createSlice({
         available: ["The Godfather", "Pulp Fiction"],
         searchedFor: "",
         searchedCities: [],
+        perPage: 10,
+        page: 1,
     } as {
         available: string[];
         searchedCities: City[];
         searchedFor: string;
+        perPage: number;
+        page: number;
     },
     reducers: {
         setSearchedFor: (state, action: PayloadAction<string | null>) => {
@@ -22,8 +26,15 @@ const counterSlice = createSlice({
         setSearchedCities: (state, action: PayloadAction<City[]>) => {
             state.searchedCities = [...action.payload];
         },
+        setPage: (state, action: PayloadAction<number>) => {
+            state.page = action.payload;
+        },
+        setPerPage: (state, action: PayloadAction<number>) => {
+            state.perPage = action.payload;
+        },
     },
 });
 
-export const { setSearchedFor, setAllCities, setSearchedCities } = counterSlice.actions;
+export const { setSearchedFor, setAllCities, setSearchedCities, setPage, setPerPage } =
+    counterSlice.actions;
 export default counterSlice.reducer;

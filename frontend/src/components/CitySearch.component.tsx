@@ -8,9 +8,9 @@ const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes
     const dispatch = useDispatch();
     const inputValue = useSelector((state: RootState) => state.data.searchedFor);
     return (
-        <div className={`${classes} search-container`}>
+        <div className={`${classes} search-container w-[100%]`}>
             <form
-                className="items-center flex"
+                className="items-center lg:items-start flex-col lg:flex-row flex w-[100%]"
                 onKeyDown={async (e) => {
                     if (e.key === "Enter") {
                         e.preventDefault();
@@ -18,7 +18,7 @@ const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes
                     }
                 }}
             >
-                <label className="text-white">
+                <label className="text-white lg:mr-2">
                     City name:{" "}
                     <Autocomplete
                         sx={() => ({
@@ -27,22 +27,22 @@ const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes
                                 color: "var(--color-green-700)",
                             },
                             "& input": {
-                                width: 200,
+                                width: "100%",
                                 bgcolor: "transparent",
                                 color: "var(--color-white)",
                             },
                         })}
-                        id="custom-input-demo"
+                        className="w-[100%] lg:w-fit"
                         options={cities}
                         value={inputValue}
                         onInputChange={(_e, value) => dispatch(setSearchedFor(value))}
                         renderInput={(params) => (
-                            <div ref={params.InputProps.ref}>
+                            <div ref={params.InputProps.ref} className="w-[100%] mb-2">
                                 <input
                                     type="text"
                                     {...params.inputProps}
                                     placeholder="Type your city"
-                                    className="border-2 border-green-700 focus:border-green-400 outline-none p-2 rounded-sm mr-2 text-sm"
+                                    className="border-2 border-green-700 focus:border-green-400 outline-none p-2 rounded-sm text-sm"
                                 />
                             </div>
                         )}
@@ -62,7 +62,7 @@ const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes
                         await searchCallback(inputValue);
                     }}
                 >
-                    Contained
+                    Search
                 </Button>
             </form>
         </div>
