@@ -2,7 +2,7 @@ import { WhereGeneratorPattern } from "../types/utils.type";
 
 /**
  *
- * @param {WhereGenerator[]} config
+ * @param {WhereGeneratorPattern[]} config
  * @param {string} prefix
  * @param {string} suffix
  * @returns {string}
@@ -51,4 +51,21 @@ export function createQueryValues(
     return values
         .filter((item: string | number, index: number) => booleanArray[index])
         .map((element: string | number, index) => callbacks[index](String(element)));
+}
+
+export function sqlInsertGenerator(quantityOfRows: number, quantityOfColumns: number) {
+    let insertString = "";
+    for (let i = 0; i < quantityOfRows; i++) {
+        insertString += `(${createSetOfParams(quantityOfColumns, i * quantityOfColumns + 1)}),`;
+    }
+    return insertString.slice(0, insertString.length - 1);
+}
+
+export function createSetOfParams(quantity: number, start: number = 0) {
+    let paramsString: string = "";
+    for (let i = start; i < start + quantity; i++) {
+        paramsString += `$${i},`;
+    }
+
+    return paramsString.slice(0, paramsString.length - 1);
 }

@@ -1,10 +1,13 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import cityRoute from "./routes/city.route";
+import bodyParser from "body-parser";
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
+
+app.use(bodyParser.json());
 
 app.use("/api/v1", cityRoute());
 

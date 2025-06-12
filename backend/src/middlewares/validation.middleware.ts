@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { cityValidation } from "../utils/validation.util";
+import { cityToInsertValidation, cityValidation } from "../utils/validation.util";
 import { sendError } from "../utils/error.util";
 import { getQueryParam } from "../utils/api.util";
 import { CitySearchQuery } from "../types/api.type";
+import { City } from "../types/city.type";
 
 export async function validateCity(
     req: { queryValidation?: boolean[]; query: object },
@@ -18,5 +19,17 @@ export async function validateCity(
     if (!validationResult.result) return sendError(res, 400, "Bad Request");
     req.queryValidation = validationResult.queryValidation;
 
+    next();
+}
+
+export async function validateCityToInsert(req: Request, res: Response, next: NextFunction) {
+    if (Array.isArray(req.body.cities) && req.body.cities.length < 1)
+        return sendError(res, 400, "Bad Request");
+
+    const everyOk: boolean = req.body.cities.every((element: City) =>
+        cityToInsertValidation(element.cityName, String(element.count), element.uuid),
+    );
+
+    if (!everyOk) return sendError(res, 400, "Bad Request");
     next();
 }

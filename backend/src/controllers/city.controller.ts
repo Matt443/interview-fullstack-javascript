@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import cityModel from "../models/city.model";
 import { sendError } from "../utils/error.util";
 import { CitySearchQuery } from "../types/api.type";
+import { sqlInsertGenerator } from "../utils/sql.utils";
 
 export default {
     async getCities(
@@ -18,5 +19,8 @@ export default {
             sendError(res, 500, "Server Error");
         }
     },
-    async insertCities(req: Request, res: Response, next: NextFunction) {},
+    async insertCities(req: Request, res: Response, next: NextFunction) {
+        const citiesAdded: number = await cityModel.insertCities(req.body.cities);
+        res.send({ mgs: `Sucessfully added ${citiesAdded} rows` });
+    },
 };

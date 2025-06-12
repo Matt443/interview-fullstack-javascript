@@ -1,5 +1,5 @@
 export interface City {
     uuid: `${string}-${string}-${string}-${string}-${string}`;
-    city_name: string;
+    cityName: string;
     count: number;
 }

@@ -95,7 +95,7 @@ export function cityValidation(
         isInRange(element, 0, 0),
     );
     const queryValidation: boolean[] = [
-        validationWithRegex(name, /^[A-Za-z]+$/),
+        validationWithRegex(name, /^[A-Za-zöüÄÖÜß]+$/),
         validationWithRegex(min, /^[0-9]+$/),
         validationWithRegex(max, /^[0-9]+$/),
         validationUUID(id),
@@ -111,16 +111,24 @@ export function cityValidation(
         doubleFunctionValidation(lengthsValidation, queryValidation)
     )
         return { result: true, queryValidation };
-    else if (
-        validationType === "insert" &&
-        id.length === 0 &&
-        validationWithRegex(name, /^[A-Za-z]+$/) &&
-        validationWithRegex(min, /^[0-9]+$/) &&
-        validationWithRegex(max, /^[0-9]+$/)
-    )
-        return { result: true, queryValidation };
-    else if (everyValidation(queryValidation, (element: boolean) => element))
-        return { result: true, queryValidation };
 
     return { result: false, queryValidation };
+}
+
+export function cityToInsertValidation(name: string, count: string, id: string = "") {
+    if (!name || !count) return false;
+
+    if (
+        id.length === 0 &&
+        validationWithRegex(name, /^[A-Za-zöüÄÖÜß]+$/) &&
+        validationWithRegex(count, /^[0-9]+$/)
+    )
+        return true;
+    if (
+        validationWithRegex(name, /^[A-Za-zöüÄÖÜß]+$/) &&
+        validationWithRegex(count, /^[0-9]+$/) &&
+        validationUUID(id)
+    )
+        return true;
+    return false;
 }
