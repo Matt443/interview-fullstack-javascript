@@ -49,8 +49,8 @@ const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes
                         color: "var(--color-black)",
                         "&:hover": { bgcolor: "transparent", color: "var(--color-green-400)" },
                     }}
-                    onClick={() => {
-                        searchCallback(inputValue);
+                    onClick={async () => {
+                        await searchCallback(inputValue);
                     }}
                 >
                     Contained

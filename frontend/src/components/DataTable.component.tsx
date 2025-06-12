@@ -26,10 +26,9 @@ const tableCSS = {
     },
 };
 
-const paginationModel = { page: 0, pageSize: 5 };
-
 const DataTable: React.FC<DataTableProps> = ({ columns, rows }) => {
     console.log(rows);
+    const paginationModel = { page: 0, pageSize: rows.length || 100 };
     return (
         <>
             <DataGrid
@@ -37,8 +36,7 @@ const DataTable: React.FC<DataTableProps> = ({ columns, rows }) => {
                 rows={rows}
                 columns={columns}
                 initialState={{ pagination: { paginationModel } }}
-                pageSizeOptions={[5, 10]}
-                checkboxSelection
+                checkboxSelection={false}
                 // onRowSelectionModelChange={(newSelection) => {console.log(newSelection)}}
             />
         </>
