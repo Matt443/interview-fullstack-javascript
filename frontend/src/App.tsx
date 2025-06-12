@@ -6,6 +6,7 @@ import { GridColDef } from "@mui/x-data-grid";
 import {
     setAllCities,
     setPage,
+    setPagesQuantity,
     setPerPage,
     setSearchedCities,
 } from "./features/counterSlice.feature";
@@ -26,7 +27,7 @@ async function getCities(
     name: string = "",
     page: number = 1,
     perPage: number = 10,
-): Promise<City[]> {
+): Promise<{ rows: City[]; foundAtAll: number }> {
     try {
         const response = await axios.get(
             `http://localhost:8000/api/v1/cities?name=${name}&page=${page}&perPage=${perPage}`,
@@ -34,13 +35,15 @@ async function getCities(
         return response.data;
     } catch (error) {
         console.error(error);
-        return [];
+        return { rows: [], foundAtAll: 0 };
     }
 }
 
 function App() {
     const available = useSelector((state: RootState) => state.data.available);
     const searchedCities = useSelector((state: RootState) => state.data.searchedCities);
+    const perPage = useSelector((state: RootState) => state.data.perPage);
+    const pagesQuantity = useSelector((state: RootState) => state.data.pagesQuantity);
     const page = useSelector((state: RootState) => state.data.page);
     const dispatch = useDispatch();
 
@@ -48,22 +51,25 @@ function App() {
 
     useEffect(() => {
         const getData = async () => {
-            dispatch(setAllCities((await getCities("")).map((element: City) => element.cityname)));
-            dispatch(setSearchedCities(await getCities("")));
+            const response = await getCities("");
+            dispatch(setAllCities(response.rows.map((element: City) => element.cityname)));
+            dispatch(setSearchedCities(response.rows));
+            dispatch(setPagesQuantity(Math.ceil(response.foundAtAll / perPage)));
         };
         getData();
     }, [dispatch]);
 
     function changePage(next: number = 1) {
         const askedPage = page + 1 * next;
-        const changeAllowed = isInRange(askedPage, 1, 10);
+        const changeAllowed = isInRange(askedPage, 1, pagesQuantity);
 
         if (!changeAllowed) return;
 
         const pageToSet = changeAllowed ? askedPage : page;
         const fn = async () => {
-            const response = await getCities(undefined, pageToSet, undefined);
-            dispatch(setSearchedCities(response));
+            const response = await getCities(inputValue, pageToSet, perPage);
+            dispatch(setSearchedCities(response.rows));
+            dispatch(setPagesQuantity(Math.ceil(response.foundAtAll / perPage)));
         };
         fn();
         dispatch(setPage(pageToSet));
@@ -72,8 +78,9 @@ function App() {
         dispatch(setPerPage(value));
         dispatch(setPage(1));
         const fn = async () => {
-            const response = await getCities(undefined, page, value);
-            dispatch(setSearchedCities(response));
+            const response = await getCities(inputValue, 1, value);
+            dispatch(setSearchedCities(response.rows));
+            dispatch(setPagesQuantity(Math.ceil(response.foundAtAll / value)));
         };
         fn();
     }
@@ -82,7 +89,9 @@ function App() {
         <>
             <TopBar
                 searchCallback={async () => {
-                    dispatch(setSearchedCities(await getCities(inputValue)));
+                    const response = await getCities(inputValue);
+                    dispatch(setSearchedCities(response.rows));
+                    dispatch(setPagesQuantity(Math.ceil(response.foundAtAll / perPage)));
                 }}
                 cities={available}
             ></TopBar>

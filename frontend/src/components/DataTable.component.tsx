@@ -24,19 +24,16 @@ const tableCSS = {
     "& .MuiDataGrid-row.Mui-selected:hover": {
         bgcolor: "var(--color-green-700)",
     },
+    "& .MuiDataGrid-footerContainer": {
+        display: "none",
+    },
 };
 
 const DataTable: React.FC<DataTableProps> = ({ columns, rows }) => {
-    console.log(rows);
+    // console.log(rows);
     return (
         <>
-            <DataGrid
-                sx={tableCSS}
-                rows={rows}
-                columns={columns}
-                checkboxSelection={false}
-                // onRowSelectionModelChange={(newSelection) => {console.log(newSelection)}}
-            />
+            <DataGrid sx={tableCSS} rows={rows} columns={columns} checkboxSelection={false} />
         </>
     );
 };
