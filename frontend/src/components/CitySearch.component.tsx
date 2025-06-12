@@ -34,7 +34,9 @@ const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes
                         max="999999"
                         id="count-min"
                         className="border-2 border-green-700 focus:border-green-400 outline-none p-2 rounded-sm text-sm text-white lg:ml-2 w-[100%]"
-                        onInput={(event) => dispatch(setMin(event.target.value))}
+                        onInput={(event) =>
+                            dispatch(setMin((event.target as HTMLInputElement).value))
+                        }
                     />
                 </div>
                 <div className="input-container flex flex-col lg:flex-row lg:items-center items-start lg:mr-2 w-[100%] lg:max-w-[300px]">
@@ -47,7 +49,9 @@ const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes
                         max="999999"
                         id="count-min"
                         className="border-2 border-green-700 focus:border-green-400 outline-none p-2 rounded-sm text-sm text-white lg:ml-2 w-[100%]"
-                        onInput={(event) => dispatch(setMax(event.target.value))}
+                        onInput={(event) =>
+                            dispatch(setMax((event.target as HTMLInputElement).value))
+                        }
                     />
                 </div>
                 <Button

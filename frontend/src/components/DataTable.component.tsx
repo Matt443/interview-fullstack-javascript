@@ -3,6 +3,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 interface DataTableProps {
     columns: GridColDef[];
     rows: object[];
+    checkboxSelection: boolean;
 }
 
 const tableCSS = {
@@ -29,11 +30,16 @@ const tableCSS = {
     },
 };
 
-const DataTable: React.FC<DataTableProps> = ({ columns, rows }) => {
+const DataTable: React.FC<DataTableProps> = ({ columns, rows, checkboxSelection }) => {
     // console.log(rows);
     return (
         <>
-            <DataGrid sx={tableCSS} rows={rows} columns={columns} checkboxSelection={false} />
+            <DataGrid
+                sx={tableCSS}
+                rows={rows}
+                columns={columns}
+                checkboxSelection={checkboxSelection}
+            />
         </>
     );
 };

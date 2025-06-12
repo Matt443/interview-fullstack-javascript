@@ -6,9 +6,9 @@ interface TopBarProps {
 }
 const TopBar: React.FC<TopBarProps> = ({ searchCallback, cities }) => {
     return (
-        <nav className="flex py-4 px-2 w-[100%] position-fixed justify-start">
+        <div className="flex py-4 px-2 w-[100%] position-fixed justify-start">
             <CitySearch searchCallback={searchCallback} cities={cities}></CitySearch>
-        </nav>
+        </div>
     );
 };
 

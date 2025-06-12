@@ -12,6 +12,9 @@ const counterSlice = createSlice({
         pagesQuantity: 0,
         min: "",
         max: "",
+        newCityName: "",
+        newCityCount: 0,
+        addMessage: "",
     } as {
         available: string[];
         searchedCities: City[];
@@ -21,6 +24,9 @@ const counterSlice = createSlice({
         pagesQuantity: number;
         min: string;
         max: string;
+        newCityName: string;
+        newCityCount: number;
+        addMessage: string;
     },
     reducers: {
         setSearchedFor: (state, action: PayloadAction<string | null>) => {
@@ -47,6 +53,15 @@ const counterSlice = createSlice({
         setMax: (state, action: PayloadAction<string>) => {
             state.max = action.payload;
         },
+        setNewCityName: (state, action: PayloadAction<string>) => {
+            state.newCityName = action.payload;
+        },
+        setNewCityCount: (state, action: PayloadAction<number>) => {
+            state.newCityCount = action.payload;
+        },
+        setAddMessage: (state, action: PayloadAction<string>) => {
+            state.addMessage = action.payload;
+        },
     },
 });
 
@@ -59,5 +74,8 @@ export const {
     setPagesQuantity,
     setMin,
     setMax,
+    setNewCityCount,
+    setNewCityName,
+    setAddMessage,
 } = counterSlice.actions;
 export default counterSlice.reducer;

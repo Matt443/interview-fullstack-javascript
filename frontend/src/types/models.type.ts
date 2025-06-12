@@ -5,9 +5,9 @@ export interface CitySearchProps {
 }
 
 export interface City {
-    cityname: string;
+    name: string;
     count: number;
-    id: string;
+    id?: string;
 }
 
 export interface CityQueryParams {
