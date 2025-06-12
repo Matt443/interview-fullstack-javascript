@@ -3,6 +3,7 @@ import cityModel from "../models/city.model";
 import { sendError } from "../utils/error.util";
 import { CitySearchQuery } from "../types/api.type";
 import { sqlInsertGenerator } from "../utils/sql.utils";
+import { City } from "../types/city.type";
 
 export default {
     async getCities(
@@ -16,11 +17,34 @@ export default {
         try {
             res.send(await cityModel.getCities(req.queryValidation, { name, uuid, min, max }));
         } catch (error) {
+            console.error(error);
             sendError(res, 500, "Server Error");
         }
     },
     async insertCities(req: Request, res: Response, next: NextFunction) {
-        const citiesAdded: number = await cityModel.insertCities(req.body.cities);
-        res.send({ mgs: `Sucessfully added ${citiesAdded} rows` });
+        try {
+            const citiesAdded: number = await cityModel.insertCities(req.body.cities);
+            if (!citiesAdded || citiesAdded < 1) {
+                return sendError(res, 422, "Unprocessable Entity");
+            }
+            res.send({ mgs: `Sucessfully added ${citiesAdded} rows` });
+        } catch (error) {
+            console.error(error);
+            sendError(res, 500, "Server Error");
+        }
+    },
+    async updateCity(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { cityName, uuid, count } = req.body.city as unknown as City;
+            const id = req.body.id as unknown as string;
+            const citiesUpdated: number = await cityModel.updateCity(id, { cityName, uuid, count });
+            if (!citiesUpdated || citiesUpdated !== 1) {
+                return sendError(res, 422, "Unprocessable Entity");
+            }
+            res.send({ mgs: `Sucessfully updated ${citiesUpdated} rows` });
+        } catch (error) {
+            console.error(error);
+            sendError(res, 500, "Server Error");
+        }
     },
 };

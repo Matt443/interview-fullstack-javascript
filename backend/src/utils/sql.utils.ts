@@ -53,18 +53,34 @@ export function createQueryValues(
         .map((element: string | number, index) => callbacks[index](String(element)));
 }
 
-export function sqlInsertGenerator(quantityOfRows: number, quantityOfColumns: number) {
+/**
+ *
+ * @param {number} quantityOfRows
+ * @param {number} quantityOfColumns
+ * @returns {string}
+ */
+export function sqlInsertGenerator(quantityOfRows: number, quantityOfColumns: number): string {
     let insertString = "";
     for (let i = 0; i < quantityOfRows; i++) {
-        insertString += `(${createSetOfParams(quantityOfColumns, i * quantityOfColumns + 1)}),`;
+        insertString += `(${createSetOfParams(quantityOfColumns, i * quantityOfColumns)}),`;
     }
     return insertString.slice(0, insertString.length - 1);
 }
 
-export function createSetOfParams(quantity: number, start: number = 0) {
+/**
+ *
+ * @param {number} quantity
+ * @param {number} start
+ * @returns {string}
+ */
+export function createSetOfParams(
+    quantity: number,
+    start: number = 0,
+    paramPrefixes: string[] = Array.from({ length: quantity }, () => ""),
+) {
     let paramsString: string = "";
     for (let i = start; i < start + quantity; i++) {
-        paramsString += `$${i},`;
+        paramsString += `${paramPrefixes[i]}$${i + 1},`;
     }
 
     return paramsString.slice(0, paramsString.length - 1);
