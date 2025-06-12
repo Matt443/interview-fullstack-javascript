@@ -87,7 +87,6 @@ export function cityValidation(
     min: string,
     max: string,
     id: string = "",
-    validationType: "search" | "insert" = "search",
 ): { result: boolean; queryValidation: boolean[] } {
     const queryLengths: number[] = [name.length, min.length, max.length, id.length];
 
@@ -101,21 +100,22 @@ export function cityValidation(
         validationUUID(id),
     ];
 
-    if (
-        validationType === "search" &&
-        everyValidation(queryLengths, (element: number) => isInRange(element, 0, 0))
-    )
+    if (everyValidation(queryLengths, (element: number) => isInRange(element, 0, 0)))
         return { result: true, queryValidation };
-    else if (
-        validationType === "search" &&
-        doubleFunctionValidation(lengthsValidation, queryValidation)
-    )
+    else if (doubleFunctionValidation(lengthsValidation, queryValidation))
         return { result: true, queryValidation };
 
     return { result: false, queryValidation };
 }
 
-export function cityToInsertValidation(name: string, count: string, id: string = "") {
+/**
+ *
+ * @param {string} name
+ * @param {string} count
+ * @param {string} id
+ * @returns {boolean}
+ */
+export function cityToInsertValidation(name: string, count: string, id: string = ""): boolean {
     if (!name || !count) return false;
 
     if (
@@ -124,11 +124,24 @@ export function cityToInsertValidation(name: string, count: string, id: string =
         validationWithRegex(count, /^[0-9]+$/)
     )
         return true;
-    if (
-        validationWithRegex(name, /^[A-Za-zöüÄÖÜß]+$/) &&
-        validationWithRegex(count, /^[0-9]+$/) &&
-        validationUUID(id)
-    )
-        return true;
+    if (cityFullValidation(name, count, id)) return true;
     return false;
+}
+
+/**
+ *
+ * @param {string} name
+ * @param {string} count
+ * @param {string} id
+ * @returns {boolean}
+ */
+export function cityFullValidation(name: string, count: string, id: string = ""): boolean {
+    if (!name || !count || !id) return false;
+    if (
+        !validationWithRegex(name, /^[A-Za-zöüÄÖÜß]+$/) &&
+        !validationWithRegex(count, /^[0-9]+$/) &&
+        !validationUUID(id)
+    )
+        return false;
+    return true;
 }

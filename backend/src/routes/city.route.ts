@@ -11,5 +11,6 @@ export default () => {
     api.get("/cities", validateCity, cityController.getCities);
     api.post("/cities", validateCityToInsert, cityController.insertCities);
     api.put("/cities", validateCityToUpdate, cityController.updateCity);
+    api.delete("/cities", cityController.deleteCity);
     return api;
 };

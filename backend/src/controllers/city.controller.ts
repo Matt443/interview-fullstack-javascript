@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import cityModel from "../models/city.model";
 import { sendError } from "../utils/error.util";
 import { CitySearchQuery } from "../types/api.type";
-import { sqlInsertGenerator } from "../utils/sql.utils";
 import { City } from "../types/city.type";
 
 export default {
@@ -45,6 +44,16 @@ export default {
         } catch (error) {
             console.error(error);
             sendError(res, 500, "Server Error");
+        }
+    },
+    async deleteCity(req: Request, res: Response, next: NextFunction) {
+        try {
+            const id = req.query.id as unknown as string;
+            const rowsDeleted = await cityModel.deleteCity(id);
+            res.send({ mgs: `Sucessfully deleted ${rowsDeleted} rows` });
+        } catch (error) {
+            console.log(error);
+            throw error;
         }
     },
 };

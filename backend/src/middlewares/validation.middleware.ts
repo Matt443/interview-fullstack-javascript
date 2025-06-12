@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { cityToInsertValidation, cityValidation, validationUUID } from "../utils/validation.util";
+import {
+    cityFullValidation,
+    cityToInsertValidation,
+    cityValidation,
+    validationUUID,
+} from "../utils/validation.util";
 import { sendError } from "../utils/error.util";
 import { getQueryParam } from "../utils/api.util";
 import { CitySearchQuery } from "../types/api.type";
@@ -36,9 +41,20 @@ export async function validateCityToInsert(req: Request, res: Response, next: Ne
 
 export async function validateCityToUpdate(req: Request, res: Response, next: NextFunction) {
     const { cityName, uuid, count } = req.body.city as unknown as City;
-    const id = (req.body.id = req.body.id as unknown as string);
+    const id = req.body.id as unknown as string;
 
-    if (!cityToInsertValidation(cityName, String(count), uuid) || !validationUUID(id))
+    if (
+        !cityToInsertValidation(cityName, String(count), uuid) ||
+        !cityFullValidation(cityName, String(count), uuid) ||
+        !validationUUID(id)
+    )
         return sendError(res, 400, "Bad Request");
+    next();
+}
+
+export async function validateUUID(req: Request, res: Response, next: NextFunction) {
+    const id = req.query.id as unknown as string;
+
+    if (!validationUUID(id)) return sendError(res, 400, "Bad Request");
     next();
 }
