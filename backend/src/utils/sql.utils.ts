@@ -19,7 +19,7 @@ export function sqlWhereGenator(
     config[config.length - 1].suffix = "";
     config.forEach(
         (element: WhereGeneratorPattern, index: number) =>
-            (query += ` ${element.columnName} ${element.operator} $${index + 1} ${element.suffix}`),
+            (query += ` ${element.columnName} ${element.operator} $${index + 1}${element.operatorClose || ""} ${element.suffix}`),
     );
     return (query += ` ${suffix}`);
 }

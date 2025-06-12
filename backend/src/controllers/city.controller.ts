@@ -3,6 +3,7 @@ import cityModel from "../models/city.model";
 import { sendError } from "../utils/error.util";
 import { CitySearchQuery } from "../types/api.type";
 import { City } from "../types/city.type";
+import { getQueryParam } from "../utils/api.util";
 
 export default {
     async getCities(
@@ -13,8 +14,23 @@ export default {
         if (!req.queryValidation) return sendError(res, 500, "Server Error");
 
         const { name, uuid, min, max } = req.query as unknown as CitySearchQuery;
+        const perPage = getQueryParam(
+            req.query as unknown as CitySearchQuery,
+            "perPage",
+            "10",
+        ) as string;
+        const page = getQueryParam(req.query as unknown as CitySearchQuery, "page", "1") as string;
         try {
-            res.send(await cityModel.getCities(req.queryValidation, { name, uuid, min, max }));
+            res.send(
+                await cityModel.getCities(req.queryValidation, {
+                    name,
+                    uuid,
+                    min,
+                    max,
+                    perPage,
+                    page,
+                }),
+            );
         } catch (error) {
             console.error(error);
             sendError(res, 500, "Server Error");

@@ -4,6 +4,7 @@ import {
     cityToInsertValidation,
     cityValidation,
     validationUUID,
+    validationWithRegex,
 } from "../utils/validation.util";
 import { sendError } from "../utils/error.util";
 import { getQueryParam } from "../utils/api.util";
@@ -56,5 +57,18 @@ export async function validateUUID(req: Request, res: Response, next: NextFuncti
     const id = req.query.id as unknown as string;
 
     if (!validationUUID(id)) return sendError(res, 400, "Bad Request");
+    next();
+}
+
+export async function pagePropsValidation(req: Request, res: Response, next: NextFunction) {
+    const perPage = getQueryParam(
+        req.query as unknown as CitySearchQuery,
+        "perPage",
+        "10",
+    ) as string;
+    const page = getQueryParam(req.query as unknown as CitySearchQuery, "uuid", "1") as string;
+
+    if (!validationWithRegex(perPage, /^[0-9]+$/) || !validationWithRegex(page, /^[0-9]+$/))
+        return sendError(res, 400, "Bad Request");
     next();
 }

@@ -12,18 +12,22 @@ import {
 
 export default {
     async getCities(queryBooleanArray: boolean[], cityParams: CitySearchQuery): Promise<City[]> {
-        const { name, uuid, min, max } = cityParams;
+        const { name, uuid, min, max, perPage, page } = cityParams;
         try {
             const pool = connectDB();
             const queryPattern: WhereGeneratorPattern[] = [
-                { columnName: "LOWER(cityname)", operator: "LIKE LOWER(", suffix: ") AND" },
+                {
+                    columnName: "LOWER(cityname)",
+                    operator: "LIKE LOWER(",
+                    suffix: "AND",
+                    operatorClose: ")",
+                },
                 { columnName: "count", operator: ">=", suffix: "AND" },
                 { columnName: "count", operator: "<=", suffix: "AND" },
                 { columnName: "uuid", operator: "=", suffix: "AND" },
             ];
             const toConsideration = createGeneratorConfig(queryBooleanArray, queryPattern);
             const whereQuery: string = sqlWhereGenator(toConsideration);
-            const query = `SELECT * FROM cities ${whereQuery}`;
             const queryValues = createQueryValues(
                 queryBooleanArray,
                 [name, min, max, uuid],
@@ -34,8 +38,10 @@ export default {
                     (element: string) => element,
                 ],
             );
+            const query = `SELECT * FROM cities ${whereQuery} LIMIT $${queryValues.length + 1} OFFSET $${queryValues.length + 2}`;
+            const offset: number = (Number(page) - 1) * Number(perPage);
 
-            const result = await pool.query(query, queryValues);
+            const result = await pool.query(query, [...queryValues, perPage, offset]);
             return result.rows;
         } catch (error) {
             console.error(error);

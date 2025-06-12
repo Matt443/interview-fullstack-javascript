@@ -3,4 +3,6 @@ export interface CitySearchQuery {
     min: number;
     max: number;
     uuid: string;
+    page?: string;
+    perPage?: string;
 }

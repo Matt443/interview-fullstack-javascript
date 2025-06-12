@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
 import cityController from "../controllers/city.controller";
 import {
+    pagePropsValidation,
     validateCity,
     validateCityToInsert,
     validateCityToUpdate,
@@ -8,7 +9,7 @@ import {
 
 export default () => {
     const api = Router();
-    api.get("/cities", validateCity, cityController.getCities);
+    api.get("/cities", validateCity, pagePropsValidation, cityController.getCities);
     api.post("/cities", validateCityToInsert, cityController.insertCities);
     api.put("/cities", validateCityToUpdate, cityController.updateCity);
     api.delete("/cities", cityController.deleteCity);
