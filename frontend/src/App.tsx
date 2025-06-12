@@ -34,6 +34,7 @@ function App() {
     useEffect(() => {
         const getData = async () => {
             dispatch(setAllCities((await getCities("")).map((element: City) => element.cityname)));
+            dispatch(setSearchedCities(await getCities("")));
         };
         getData();
     }, [dispatch]);

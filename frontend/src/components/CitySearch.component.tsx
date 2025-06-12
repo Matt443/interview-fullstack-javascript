@@ -9,7 +9,15 @@ const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes
     const inputValue = useSelector((state: RootState) => state.data.searchedFor);
     return (
         <div className={`${classes} search-container`}>
-            <form className="items-center flex">
+            <form
+                className="items-center flex"
+                onKeyDown={async (e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        await searchCallback(inputValue);
+                    }
+                }}
+            >
                 <label className="text-white">
                     City name:{" "}
                     <Autocomplete
@@ -42,6 +50,7 @@ const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes
                 </label>
                 <Button
                     variant="contained"
+                    type="button"
                     className="text-sm p-2 h-[40px]"
                     sx={{
                         border: "2px solid var(--color-green-400)",
