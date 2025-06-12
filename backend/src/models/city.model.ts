@@ -11,7 +11,10 @@ import {
 } from "../utils/sql.utils";
 
 export default {
-    async getCities(queryBooleanArray: boolean[], cityParams: CitySearchQuery): Promise<City[]> {
+    async getCities(
+        queryBooleanArray: boolean[],
+        cityParams: CitySearchQuery,
+    ): Promise<{ rows: City[]; foundAtAll: number }> {
         const { name, uuid, min, max, perPage, page } = cityParams;
         try {
             const pool = connectDB();
@@ -39,10 +42,11 @@ export default {
                 ],
             );
             const query = `SELECT * FROM cities ${whereQuery} LIMIT $${queryValues.length + 1} OFFSET $${queryValues.length + 2}`;
+            const querySum = `SELECT cityname, id FROM cities ${whereQuery}`;
             const offset: number = (Number(page) - 1) * Number(perPage);
-
+            const foundAtAll: number = (await pool.query(querySum, queryValues)).rowCount || 0;
             const result = await pool.query(query, [...queryValues, perPage, offset]);
-            return result.rows;
+            return { rows: result.rows, foundAtAll };
         } catch (error) {
             console.error(error);
             throw error;

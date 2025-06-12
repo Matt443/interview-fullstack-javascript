@@ -3,6 +3,7 @@ import {
     cityFullValidation,
     cityToInsertValidation,
     cityValidation,
+    isInRange,
     validationUUID,
     validationWithRegex,
 } from "../utils/validation.util";
@@ -66,9 +67,22 @@ export async function pagePropsValidation(req: Request, res: Response, next: Nex
         "perPage",
         "10",
     ) as string;
-    const page = getQueryParam(req.query as unknown as CitySearchQuery, "uuid", "1") as string;
-
-    if (!validationWithRegex(perPage, /^[0-9]+$/) || !validationWithRegex(page, /^[0-9]+$/))
+    const page = getQueryParam(req.query as unknown as CitySearchQuery, "page", "1") as string;
+    // console.log(req.query);
+    // console.log(
+    //     perPage,
+    //     page,
+    //     !validationWithRegex(perPage, /^[0-9]+$/),
+    //     !validationWithRegex(page, /^[0-9]+$/),
+    //     !isInRange(Number(perPage), 10, 100),
+    //     !isInRange(Number(page), 1, 100),
+    // );
+    if (
+        !validationWithRegex(perPage, /^[0-9]+$/) ||
+        !validationWithRegex(page, /^[0-9]+$/) ||
+        !isInRange(Number(perPage), 10, 100) ||
+        !isInRange(Number(page), 1, 100)
+    )
         return sendError(res, 400, "Bad Request");
     next();
 }

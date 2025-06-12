@@ -48,9 +48,11 @@ export function createQueryValues(
     values: Array<string | number>,
     callbacks: Function[],
 ): Array<string | number> {
-    return values
-        .filter((item: string | number, index: number) => booleanArray[index])
-        .map((element: string | number, index) => callbacks[index](String(element)));
+    const resultArray: string[] = [];
+    values.forEach((element: string | number, index: number) => {
+        if (booleanArray[index]) resultArray.push(callbacks[index](String(element)));
+    });
+    return resultArray;
 }
 
 /**
