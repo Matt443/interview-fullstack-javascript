@@ -42,7 +42,7 @@ export default {
             if (!citiesAdded || citiesAdded < 1) {
                 return sendError(res, 422, "Unprocessable Entity");
             }
-            res.send({ mgs: `Sucessfully added ${citiesAdded} rows` });
+            res.send({ msg: `Sucessfully added ${citiesAdded} rows` });
         } catch (error) {
             console.error(error);
             sendError(res, 500, "Server Error");
@@ -50,13 +50,13 @@ export default {
     },
     async updateCity(req: Request, res: Response, next: NextFunction) {
         try {
-            const { cityName, uuid, count } = req.body.city as unknown as City;
+            const { name, uuid, count } = req.body.city as unknown as City;
             const id = req.body.id as unknown as string;
-            const citiesUpdated: number = await cityModel.updateCity(id, { cityName, uuid, count });
+            const citiesUpdated: number = await cityModel.updateCity(id, { name, uuid, count });
             if (!citiesUpdated || citiesUpdated !== 1) {
                 return sendError(res, 422, "Unprocessable Entity");
             }
-            res.send({ mgs: `Sucessfully updated ${citiesUpdated} rows` });
+            res.send({ msg: `Sucessfully updated ${citiesUpdated} rows` });
         } catch (error) {
             console.error(error);
             sendError(res, 500, "Server Error");
@@ -66,7 +66,7 @@ export default {
         try {
             const id = req.query.id as unknown as string;
             const rowsDeleted = await cityModel.deleteCity(id);
-            res.send({ mgs: `Sucessfully deleted ${rowsDeleted} rows` });
+            res.send({ msg: `Sucessfully deleted ${rowsDeleted} rows` });
         } catch (error) {
             console.log(error);
             throw error;

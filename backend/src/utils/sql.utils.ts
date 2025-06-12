@@ -82,7 +82,7 @@ export function createSetOfParams(
 ) {
     let paramsString: string = "";
     for (let i = start; i < start + quantity; i++) {
-        paramsString += `${paramPrefixes[i % 3]}$${i + 1},`;
+        paramsString += `${paramPrefixes[i % 2]}$${i + 1},`;
     }
 
     return paramsString.slice(0, paramsString.length - 1);

@@ -20,7 +20,7 @@ export default {
             const pool = connectDB();
             const queryPattern: WhereGeneratorPattern[] = [
                 {
-                    columnName: "LOWER(cityname)",
+                    columnName: "LOWER(name)",
                     operator: "LIKE LOWER(",
                     suffix: "AND",
                     operatorClose: ")",
@@ -42,7 +42,7 @@ export default {
                 ],
             );
             const query = `SELECT * FROM cities ${whereQuery} LIMIT $${queryValues.length + 1} OFFSET $${queryValues.length + 2}`;
-            const querySum = `SELECT cityname, id FROM cities ${whereQuery}`;
+            const querySum = `SELECT name, id FROM cities ${whereQuery}`;
             const offset: number = (Number(page) - 1) * Number(perPage);
             const foundAtAll: number = (await pool.query(querySum, queryValues)).rowCount || 0;
             const result = await pool.query(query, [...queryValues, perPage, offset]);
@@ -53,10 +53,10 @@ export default {
         }
     },
     async insertCities(cities: City[]): Promise<number> {
-        const insertQuery: string = `INSERT INTO cities (id, cityname, count) VALUES ${sqlInsertGenerator(cities.length, 3)}`;
+        const insertQuery: string = `INSERT INTO cities (name, count) VALUES ${sqlInsertGenerator(cities.length, 2)}`;
         const citiesValues: Array<Array<string | number>> = [];
         cities.forEach((city: City) => {
-            citiesValues.push([city.uuid, city.cityName, city.count]);
+            citiesValues.push([city.name, city.count]);
         });
         const citiesValuesFlat = citiesValues.flat();
         try {
@@ -69,13 +69,13 @@ export default {
         }
     },
     async updateCity(id: string, updatedCity: City): Promise<number> {
-        const newValues: string = `${createSetOfParams(3, 0, ["id=", "cityname=", "count="])}`;
+        const newValues: string = `${createSetOfParams(3, 0, ["id=", "name=", "count="])}`;
         const query = `UPDATE cities SET ${newValues} WHERE id=$4`;
         try {
             const pool = connectDB();
             const result = await pool.query(query, [
                 updatedCity.uuid,
-                updatedCity.cityName,
+                updatedCity.name,
                 updatedCity.count,
                 id,
             ]);

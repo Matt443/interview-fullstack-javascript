@@ -30,11 +30,11 @@ export async function validateCity(
 }
 
 export async function validateCityToInsert(req: Request, res: Response, next: NextFunction) {
-    if (Array.isArray(req.body.cities) && req.body.cities.length < 1)
+    if (!Array.isArray(req.body.cities) || req.body.cities.length < 1)
         return sendError(res, 400, "Bad Request");
 
     const everyOk: boolean = req.body.cities.every((element: City) =>
-        cityToInsertValidation(element.cityName, String(element.count), element.uuid),
+        cityToInsertValidation(element.name, String(element.count), element.uuid),
     );
 
     if (!everyOk) return sendError(res, 400, "Bad Request");
@@ -42,12 +42,12 @@ export async function validateCityToInsert(req: Request, res: Response, next: Ne
 }
 
 export async function validateCityToUpdate(req: Request, res: Response, next: NextFunction) {
-    const { cityName, uuid, count } = req.body.city as unknown as City;
+    const { name, uuid, count } = req.body.city as unknown as City;
     const id = req.body.id as unknown as string;
 
     if (
-        !cityToInsertValidation(cityName, String(count), uuid) ||
-        !cityFullValidation(cityName, String(count), uuid) ||
+        !cityToInsertValidation(name, String(count), uuid) ||
+        !cityFullValidation(name, String(count), uuid) ||
         !validationUUID(id)
     )
         return sendError(res, 400, "Bad Request");
@@ -68,20 +68,12 @@ export async function pagePropsValidation(req: Request, res: Response, next: Nex
         "10",
     ) as string;
     const page = getQueryParam(req.query as unknown as CitySearchQuery, "page", "1") as string;
-    // console.log(req.query);
-    // console.log(
-    //     perPage,
-    //     page,
-    //     !validationWithRegex(perPage, /^[0-9]+$/),
-    //     !validationWithRegex(page, /^[0-9]+$/),
-    //     !isInRange(Number(perPage), 10, 100),
-    //     !isInRange(Number(page), 1, 100),
-    // );
+
     if (
         !validationWithRegex(perPage, /^[0-9]+$/) ||
         !validationWithRegex(page, /^[0-9]+$/) ||
-        !isInRange(Number(perPage), 10, 100) ||
-        !isInRange(Number(page), 1, 100)
+        !isInRange(Number(perPage), 10, 99999) ||
+        !isInRange(Number(page), 1, 99999)
     )
         return sendError(res, 400, "Bad Request");
     next();
