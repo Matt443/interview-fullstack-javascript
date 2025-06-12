@@ -11,11 +11,11 @@ import {
     setSearchedCities,
 } from "./features/counterSlice.feature";
 import { City } from "./types/models.type";
-import axios from "axios";
 import Pagination from "./components/Pagination.component";
 import { isInRange } from "./utils/common";
 import { SelectChangeEvent } from "@mui/material";
 import { useEffect } from "react";
+import { getCities } from "./utils/api.util";
 
 const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 300 },
@@ -23,27 +23,13 @@ const columns: GridColDef[] = [
     { field: "count", headerName: "count", width: 100 },
 ];
 
-async function getCities(
-    name: string = "",
-    page: number = 1,
-    perPage: number = 10,
-): Promise<{ rows: City[]; foundAtAll: number }> {
-    try {
-        const response = await axios.get(
-            `http://localhost:8000/api/v1/cities?name=${name}&page=${page}&perPage=${perPage}`,
-        );
-        return response.data;
-    } catch (error) {
-        console.error(error);
-        return { rows: [], foundAtAll: 0 };
-    }
-}
-
 function App() {
     const available = useSelector((state: RootState) => state.data.available);
     const searchedCities = useSelector((state: RootState) => state.data.searchedCities);
     const perPage = useSelector((state: RootState) => state.data.perPage);
     const pagesQuantity = useSelector((state: RootState) => state.data.pagesQuantity);
+    const min = useSelector((state: RootState) => state.data.min);
+    const max = useSelector((state: RootState) => state.data.max);
     const page = useSelector((state: RootState) => state.data.page);
     const dispatch = useDispatch();
 
@@ -51,13 +37,13 @@ function App() {
 
     useEffect(() => {
         const getData = async () => {
-            const response = await getCities("");
+            const response = await getCities({});
             dispatch(setAllCities(response.rows.map((element: City) => element.cityname)));
             dispatch(setSearchedCities(response.rows));
             dispatch(setPagesQuantity(Math.ceil(response.foundAtAll / perPage)));
         };
         getData();
-    }, [dispatch]);
+    }, []);
 
     function changePage(next: number = 1) {
         const askedPage = page + 1 * next;
@@ -67,7 +53,13 @@ function App() {
 
         const pageToSet = changeAllowed ? askedPage : page;
         const fn = async () => {
-            const response = await getCities(inputValue, pageToSet, perPage);
+            const response = await getCities({
+                name: inputValue,
+                page: pageToSet,
+                perPage,
+                min,
+                max,
+            });
             dispatch(setSearchedCities(response.rows));
             dispatch(setPagesQuantity(Math.ceil(response.foundAtAll / perPage)));
         };
@@ -78,7 +70,13 @@ function App() {
         dispatch(setPerPage(value));
         dispatch(setPage(1));
         const fn = async () => {
-            const response = await getCities(inputValue, 1, value);
+            const response = await getCities({
+                name: inputValue,
+                page: 1,
+                perPage: value,
+                min,
+                max,
+            });
             dispatch(setSearchedCities(response.rows));
             dispatch(setPagesQuantity(Math.ceil(response.foundAtAll / value)));
         };
@@ -89,7 +87,7 @@ function App() {
         <>
             <TopBar
                 searchCallback={async () => {
-                    const response = await getCities(inputValue);
+                    const response = await getCities({ name: inputValue, min, max, perPage });
                     dispatch(setSearchedCities(response.rows));
                     dispatch(setPagesQuantity(Math.ceil(response.foundAtAll / perPage)));
                 }}

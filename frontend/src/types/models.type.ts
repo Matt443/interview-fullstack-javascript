@@ -9,3 +9,13 @@ export interface City {
     count: number;
     id: string;
 }
+
+export interface CityQueryParams {
+    name?: string;
+    count?: number;
+    id?: string;
+    perPage?: number;
+    page?: number;
+    min?: string;
+    max?: string;
+}
