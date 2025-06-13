@@ -11,6 +11,7 @@ import {
 export default () => {
     const api = Router();
     api.get("/cities", validateCity, pagePropsValidation, cityController.getCities);
+    api.get("/cities/autocomplete", cityController.getAutocomplete);
     api.post("/cities", validateCityToInsert, cityController.insertCities);
     api.put("/cities/:id", validateUUID, validateCityToUpdate, cityController.updateCity);
     api.delete("/cities/:id", validateUUID, cityController.deleteCity);

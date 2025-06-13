@@ -81,16 +81,25 @@ export default {
         }
     },
     async deleteCity(id: string) {
-        {
-            const query = `DELETE FROM cities WHERE id=$1`;
-            try {
-                const pool = connectDB();
-                const result = await pool.query(query, [id]);
-                return result.rowCount || 0;
-            } catch (error) {
-                console.error(error);
-                throw error;
-            }
+        const query = `DELETE FROM cities WHERE id=$1`;
+        try {
+            const pool = connectDB();
+            const result = await pool.query(query, [id]);
+            return result.rowCount || 0;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    },
+    async getCityAutocomplete(name: string): Promise<string[]> {
+        const query = `SELECT (name) FROM cities LIMIT 1000`;
+        try {
+            const pool = connectDB();
+            const result = await pool.query(query);
+            return result.rows.map((element: { name: string }) => element.name);
+        } catch (error) {
+            console.error(error);
+            throw error;
         }
     },
 };
