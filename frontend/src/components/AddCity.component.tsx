@@ -53,7 +53,7 @@ export default function AddCity() {
                     </label>
                     <input
                         type="text"
-                        placeholder={"Your city name"}
+                        placeholder={"Your unique city name"}
                         id="count-min"
                         className="border-2 border-green-700 focus:border-green-400 outline-none p-2 rounded-sm text-sm text-white lg:ml-2 w-[100%]"
                         onInput={nameChangeHandler}
