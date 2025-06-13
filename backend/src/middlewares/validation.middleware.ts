@@ -36,7 +36,6 @@ export async function validateCityToInsert(req: Request, res: Response, next: Ne
     const everyOk: boolean = req.body.cities.every((element: City) =>
         cityToInsertValidation(element.name, String(element.count), element.uuid),
     );
-
     if (!everyOk) return sendError(res, 400, "Bad Request");
     next();
 }

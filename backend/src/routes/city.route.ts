@@ -19,8 +19,14 @@ export default () => {
         cityController.getCities,
     );
     api.get("/cities/autocomplete", createTableIfNotExists, cityController.getAutocomplete);
-    api.post("/cities", validateCityToInsert, cityController.insertCities);
-    api.put("/cities/:id", validateUUID, validateCityToUpdate, cityController.updateCity);
-    api.delete("/cities/:id", validateUUID, cityController.deleteCity);
+    api.post("/cities", validateCityToInsert, createTableIfNotExists, cityController.insertCities);
+    api.put(
+        "/cities/:id",
+        validateUUID,
+        validateCityToUpdate,
+        createTableIfNotExists,
+        cityController.updateCity,
+    );
+    api.delete("/cities/:id", validateUUID, createTableIfNotExists, cityController.deleteCity);
     return api;
 };
