@@ -18,7 +18,7 @@ const Pagination: React.FC<PaginationProps> = ({
     const perPage = useSelector((state: RootState) => state.data.perPage);
 
     return (
-        <>
+        <div className="pagination-container">
             <Button onClick={() => previousCallback()}>Previous</Button>
             <span className="text-white">{page}</span>
             <Button onClick={() => nextCallback()}>Next</Button>
@@ -36,7 +36,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 <MenuItem value="25">25</MenuItem>
                 <MenuItem value="100">100</MenuItem>
             </Select>
-        </>
+        </div>
     );
 };
 

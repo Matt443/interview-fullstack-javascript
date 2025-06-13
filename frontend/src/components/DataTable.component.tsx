@@ -1,9 +1,12 @@
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRowId } from "@mui/x-data-grid";
+import { useDispatch } from "react-redux";
+import { setToDelete } from "../features/counterSlice.feature";
 
 interface DataTableProps {
     columns: GridColDef[];
     rows: object[];
     checkboxSelection: boolean;
+    children?: React.ReactNode;
 }
 
 const tableCSS = {
@@ -30,8 +33,9 @@ const tableCSS = {
     },
 };
 
-const DataTable: React.FC<DataTableProps> = ({ columns, rows, checkboxSelection }) => {
-    // console.log(rows);
+const DataTable: React.FC<DataTableProps> = ({ columns, rows, checkboxSelection, children }) => {
+    const dispatch = useDispatch();
+
     return (
         <>
             <DataGrid
@@ -39,7 +43,14 @@ const DataTable: React.FC<DataTableProps> = ({ columns, rows, checkboxSelection 
                 rows={rows}
                 columns={columns}
                 checkboxSelection={checkboxSelection}
+                onRowSelectionModelChange={async (selection: {
+                    type: string;
+                    ids: Set<GridRowId>;
+                }) => {
+                    dispatch(setToDelete(Array.from(selection.ids).map(String)));
+                }}
             />
+            {children}
         </>
     );
 };

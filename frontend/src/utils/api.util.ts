@@ -28,6 +28,22 @@ export async function addCity(city: City): Promise<string> {
     }
 }
 
+export async function deleteCities(ids: string[]): Promise<number[]> {
+    try {
+        const results: number[] = [];
+        await Promise.all(
+            ids.map(async (id: string) => {
+                const response = await axios.delete(`http://localhost:8000/api/v1/cities/${id}`);
+                results.push(response.status);
+            }),
+        );
+        return results;
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+}
+
 /**
  *
  * @param {Record<string, any>}params

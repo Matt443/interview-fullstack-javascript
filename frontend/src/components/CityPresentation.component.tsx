@@ -1,4 +1,4 @@
-import { SelectChangeEvent } from "@mui/material";
+import { Button, SelectChangeEvent } from "@mui/material";
 import TopBar from "../components/TopBar.component";
 import {
     setAllCities,
@@ -7,7 +7,7 @@ import {
     setPerPage,
     setSearchedCities,
 } from "../features/counterSlice.feature";
-import { getCities } from "../utils/api.util";
+import { deleteCities, getCities } from "../utils/api.util";
 import DataTable from "../components/DataTable.component";
 import Pagination from "../components/Pagination.component";
 import { City } from "../types/models.type";
@@ -25,8 +25,9 @@ const columns: GridColDef[] = [
 
 interface CityPresentation {
     children?: React.ReactNode;
+    checkboxSelection: boolean;
 }
-const CityPresentation: React.FC<CityPresentation> = ({ children }) => {
+const CityPresentation: React.FC<CityPresentation> = ({ children, checkboxSelection = false }) => {
     const available = useSelector((state: RootState) => state.data.available);
     const searchedCities = useSelector((state: RootState) => state.data.searchedCities);
     const perPage = useSelector((state: RootState) => state.data.perPage);
@@ -34,6 +35,8 @@ const CityPresentation: React.FC<CityPresentation> = ({ children }) => {
     const min = useSelector((state: RootState) => state.data.min);
     const max = useSelector((state: RootState) => state.data.max);
     const page = useSelector((state: RootState) => state.data.page);
+    const toDelete = useSelector((state: RootState) => state.data.toDelete);
+
     const dispatch = useDispatch();
 
     const inputValue = useSelector((state: RootState) => state.data.searchedFor);
@@ -98,20 +101,41 @@ const CityPresentation: React.FC<CityPresentation> = ({ children }) => {
             <DataTable
                 rows={searchedCities}
                 columns={columns}
-                checkboxSelection={false}
-            ></DataTable>
-            <Pagination
-                page={page}
-                nextCallback={() => {
-                    changePage(1);
-                }}
-                previousCallback={() => {
-                    changePage(-1);
-                }}
-                perPageCallback={(event: SelectChangeEvent<string>) =>
-                    changePerPage(Number(event.target.value))
-                }
-            ></Pagination>
+                checkboxSelection={checkboxSelection}
+            >
+                <div className="after-table-container flex align-center justify-between">
+                    <Pagination
+                        page={page}
+                        nextCallback={() => {
+                            changePage(1);
+                        }}
+                        previousCallback={() => {
+                            changePage(-1);
+                        }}
+                        perPageCallback={(event: SelectChangeEvent<string>) =>
+                            changePerPage(Number(event.target.value))
+                        }
+                    ></Pagination>
+                    <Button
+                        variant="contained"
+                        type="button"
+                        className="text-sm p-2 h-[40px] mt-2"
+                        sx={{
+                            border: "2px solid var(--color-green-400)",
+                            bgcolor: "var(--color-green-400)",
+                            color: "var(--color-black)",
+                            "&:hover": { bgcolor: "transparent", color: "var(--color-green-400)" },
+                        }}
+                        onClick={async () => {
+                            await deleteCities(toDelete);
+                            const response = await getCities({ name: inputValue, min, max });
+                            await dispatch(setSearchedCities(response.rows));
+                        }}
+                    >
+                        Delete selected city
+                    </Button>
+                </div>
+            </DataTable>
             <div className="slot-contanier">{children}</div>
         </>
     );

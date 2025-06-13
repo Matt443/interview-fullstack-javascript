@@ -15,7 +15,7 @@ export default function Admin() {
         <>
             <Nav></Nav>
             <main className="text-white p-2">
-                <CityPresentation>
+                <CityPresentation checkboxSelection={true}>
                     <h2 className="font-bold text-xl">Add city</h2>
                     <form
                         className="flex mt-4"

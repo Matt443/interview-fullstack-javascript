@@ -15,6 +15,7 @@ const counterSlice = createSlice({
         newCityName: "",
         newCityCount: 0,
         addMessage: "",
+        toDelete: [],
     } as {
         available: string[];
         searchedCities: City[];
@@ -27,6 +28,7 @@ const counterSlice = createSlice({
         newCityName: string;
         newCityCount: number;
         addMessage: string;
+        toDelete: string[];
     },
     reducers: {
         setSearchedFor: (state, action: PayloadAction<string | null>) => {
@@ -62,6 +64,9 @@ const counterSlice = createSlice({
         setAddMessage: (state, action: PayloadAction<string>) => {
             state.addMessage = action.payload;
         },
+        setToDelete: (state, action: PayloadAction<string[]>) => {
+            state.toDelete = [...action.payload];
+        },
     },
 });
 
@@ -77,5 +82,6 @@ export const {
     setNewCityCount,
     setNewCityName,
     setAddMessage,
+    setToDelete,
 } = counterSlice.actions;
 export default counterSlice.reducer;
