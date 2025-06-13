@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import { CitySearchProps } from "../types/models.type";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../stores/state.store";
-import { Input } from "./Input.component";
+import CityAutocomplete from "./CityAutocomplete.component";
 import { setMax, setMin, setSearchedFor } from "../features/stateSlice.feature";
 import CountInput from "./CountInput.component";
 import { preventRefresh } from "../utils/common";
@@ -19,11 +19,11 @@ const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes
                 className="items-center lg:items-center flex-col lg:flex-row flex-wrap flex w-[100%]"
                 onKeyDown={(event) => preventRefresh(event.nativeEvent)}
             >
-                <Input
+                <CityAutocomplete
                     autocomplete={cities}
                     inputValue={inputValue}
                     inputCallback={(value) => dispatch(setSearchedFor(value))}
-                ></Input>
+                ></CityAutocomplete>
                 <CountInput
                     label={"Count min:"}
                     inputCallback={(value: string) => dispatch(setMin(value))}

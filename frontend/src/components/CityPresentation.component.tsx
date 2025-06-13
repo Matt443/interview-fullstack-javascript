@@ -8,10 +8,9 @@ import {
     setPerPage,
     setSearchedCities,
 } from "../features/stateSlice.feature";
-import { getCities } from "../utils/api.util";
+import { getAutocomplete, getCities } from "../utils/api.util";
 import DataTable from "../components/DataTable.component";
 import Pagination from "../components/Pagination.component";
-import { City } from "../types/models.type";
 import { useEffect } from "react";
 import { isInRange } from "../utils/common";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,8 +43,9 @@ const CityPresentation: React.FC<CityPresentation> = ({ children, checkboxSelect
 
     useEffect(() => {
         const getData = async () => {
+            const responseAutocomplete = await getAutocomplete();
+            dispatch(setAllCities(responseAutocomplete));
             const response = await getCities({});
-            dispatch(setAllCities(response.rows.map((element: City) => element.name)));
             dispatch(setSearchedCities(response.rows));
             dispatch(setPagesQuantity(Math.ceil(response.foundAtAll / perPage)));
         };

@@ -5,7 +5,7 @@ interface InputProps {
     inputCallback: (value: string) => void;
 }
 
-export const Input: React.FC<InputProps> = ({ inputValue, autocomplete, inputCallback }) => {
+const CityAutocomplete: React.FC<InputProps> = ({ inputValue, autocomplete, inputCallback }) => {
     return (
         <div className="input-container my-2 mr-2">
             <label className="text-white lg:mr-2 w-[100%] lg:max-w-[300px]">
@@ -41,3 +41,5 @@ export const Input: React.FC<InputProps> = ({ inputValue, autocomplete, inputCal
         </div>
     );
 };
+
+export default CityAutocomplete;

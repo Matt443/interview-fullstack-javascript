@@ -68,3 +68,13 @@ export function createParams(params: CityQueryParams): string {
     paramsString = paramsString.slice(0, paramsString.length - 1);
     return paramsString;
 }
+
+export async function getAutocomplete(): Promise<string[]> {
+    try {
+        const response = await axios.get(`http://localhost:8000/api/v1/cities/autocomplete`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+}

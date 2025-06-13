@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Input } from "./Input.component";
+import CityAutocomplete from "./CityAutocomplete.component";
 import { RootState } from "../stores/state.store";
 import {
     setCountUpdate,
@@ -49,11 +49,11 @@ export default function UpdateCity() {
         <>
             <h2 className="font-bold text-xl">Update City</h2>
             <form>
-                <Input
+                <CityAutocomplete
                     autocomplete={cities}
                     inputValue={inputValue}
                     inputCallback={(value) => dispatch(setSearchedForUpdate(value))}
-                ></Input>
+                ></CityAutocomplete>
                 <Button
                     variant="contained"
                     type="button"
