@@ -5,7 +5,7 @@ export default function Index() {
     return (
         <>
             <Nav></Nav>
-            <main>
+            <main className="text-white p-2">
                 <CityPresentation checkboxSelection={false}></CityPresentation>
             </main>
         </>

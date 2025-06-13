@@ -97,7 +97,7 @@ const CityPresentation: React.FC<CityPresentation> = ({ children, checkboxSelect
     }
 
     return (
-        <>
+        <section>
             <TopBar searchCallback={searchHandler} cities={available}></TopBar>
             <DataTable
                 rows={searchedCities}
@@ -121,7 +121,7 @@ const CityPresentation: React.FC<CityPresentation> = ({ children, checkboxSelect
                 </div>
             </DataTable>
             <div className="slot-contanier">{children}</div>
-        </>
+        </section>
     );
 };
 

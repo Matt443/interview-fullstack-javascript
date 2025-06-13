@@ -41,7 +41,7 @@ export default function AddCity() {
     }
 
     return (
-        <>
+        <div className="add-city-container my-2">
             <h2 className="font-bold text-xl">Add city</h2>
             <form
                 className="flex items-center"
@@ -76,6 +76,6 @@ export default function AddCity() {
                 </Button>
             </form>
             <span>{addMessage}</span>
-        </>
+        </div>
     );
 }
