@@ -26,7 +26,7 @@ export default {
                 },
                 { columnName: "count", operator: ">=", suffix: "AND" },
                 { columnName: "count", operator: "<=", suffix: "AND" },
-                { columnName: "uuid", operator: "=", suffix: "AND" },
+                { columnName: "id", operator: "=", suffix: "AND" },
             ];
             const toConsideration = createGeneratorConfig(queryBooleanArray, queryPattern);
             const whereQuery: string = sqlWhereGenator(toConsideration);
