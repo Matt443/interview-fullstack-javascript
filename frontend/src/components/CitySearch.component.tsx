@@ -3,11 +3,14 @@ import { CitySearchProps } from "../types/models.type";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../stores/state.store";
 import { Input } from "./Input.component";
-import { setMax, setMin, setSearchedFor } from "../features/counterSlice.feature";
+import { setMax, setMin, setSearchedFor } from "../features/stateSlice.feature";
+import CountInput from "./CountInput.component";
 
 const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes = "" }) => {
     const dispatch = useDispatch();
     const inputValue = useSelector((state: RootState) => state.data.searchedFor);
+    const max = useSelector((state: RootState) => state.data.max);
+    const min = useSelector((state: RootState) => state.data.min);
     return (
         <div className={`${classes} search-container w-[100%]`}>
             <form
@@ -24,36 +27,16 @@ const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes
                     inputValue={inputValue}
                     inputCallback={(value) => dispatch(setSearchedFor(value))}
                 ></Input>
-                <div className="input-container flex flex-col lg:flex-row lg:items-center items-start lg:mr-2 w-[100%] lg:m-0 lg:max-w-[300px]">
-                    <label htmlFor="count-min" className="text-white whitespace-nowrap">
-                        Count min:
-                    </label>
-                    <input
-                        type="number"
-                        min="0"
-                        max="999999"
-                        id="count-min"
-                        className="border-2 border-green-700 focus:border-green-400 outline-none p-2 rounded-sm text-sm text-white lg:ml-2 w-[100%]"
-                        onInput={(event) =>
-                            dispatch(setMin((event.target as HTMLInputElement).value))
-                        }
-                    />
-                </div>
-                <div className="input-container flex flex-col lg:flex-row lg:items-center items-start lg:mr-2 w-[100%] lg:max-w-[300px]">
-                    <label htmlFor="count-min" className="text-white whitespace-nowrap">
-                        Count max:
-                    </label>
-                    <input
-                        type="number"
-                        min="0"
-                        max="999999"
-                        id="count-min"
-                        className="border-2 border-green-700 focus:border-green-400 outline-none p-2 rounded-sm text-sm text-white lg:ml-2 w-[100%]"
-                        onInput={(event) =>
-                            dispatch(setMax((event.target as HTMLInputElement).value))
-                        }
-                    />
-                </div>
+                <CountInput
+                    label={"Count min:"}
+                    inputCallback={(value: string) => dispatch(setMin(value))}
+                    value={min}
+                ></CountInput>
+                <CountInput
+                    label={"Count max:"}
+                    inputCallback={(value: string) => dispatch(setMax(value))}
+                    value={max}
+                ></CountInput>
                 <Button
                     variant="contained"
                     type="button"
@@ -68,7 +51,7 @@ const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes
                         await searchCallback(inputValue);
                     }}
                 >
-                    Search
+                    Update
                 </Button>
             </form>
         </div>

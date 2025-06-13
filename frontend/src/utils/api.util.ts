@@ -44,6 +44,16 @@ export async function deleteCities(ids: string[]): Promise<number[]> {
     }
 }
 
+export async function updateCity(id: string, city: City): Promise<string> {
+    try {
+        const response = await axios.put(`http://localhost:8000/api/v1/cities/${id}`, { city });
+        return response.data.msg;
+    } catch (error) {
+        console.error(error);
+        return "Something went wrong";
+    }
+}
+
 /**
  *
  * @param {Record<string, any>}params

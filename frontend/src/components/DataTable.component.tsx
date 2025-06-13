@@ -1,6 +1,6 @@
 import { DataGrid, GridColDef, GridRowId } from "@mui/x-data-grid";
 import { useDispatch } from "react-redux";
-import { setToDelete } from "../features/counterSlice.feature";
+import { setToDelete } from "../features/stateSlice.feature";
 
 interface DataTableProps {
     columns: GridColDef[];

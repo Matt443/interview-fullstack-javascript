@@ -7,9 +7,9 @@ interface InputProps {
 
 export const Input: React.FC<InputProps> = ({ inputValue, autocomplete, inputCallback }) => {
     return (
-        <>
+        <div className="input-container my-2 mr-2">
             <label className="text-white lg:mr-2 w-[100%] lg:max-w-[300px]">
-                City name:{" "}
+                City name:
                 <Autocomplete
                     sx={() => ({
                         display: "inline-block",
@@ -32,12 +32,12 @@ export const Input: React.FC<InputProps> = ({ inputValue, autocomplete, inputCal
                                 type="text"
                                 {...params.inputProps}
                                 placeholder="Type your city"
-                                className="border-2 border-green-700 focus:border-green-400 outline-none p-2 rounded-sm text-sm w-[100%]"
+                                className="border-2 mx-2 border-green-700 focus:border-green-400 outline-none p-2 rounded-sm text-sm w-[100%]"
                             />
                         </div>
                     )}
                 />
             </label>
-        </>
+        </div>
     );
 };

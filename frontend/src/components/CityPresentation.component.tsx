@@ -6,7 +6,7 @@ import {
     setPagesQuantity,
     setPerPage,
     setSearchedCities,
-} from "../features/counterSlice.feature";
+} from "../features/stateSlice.feature";
 import { deleteCities, getCities } from "../utils/api.util";
 import DataTable from "../components/DataTable.component";
 import Pagination from "../components/Pagination.component";
