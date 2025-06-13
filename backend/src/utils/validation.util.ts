@@ -94,7 +94,7 @@ export function cityValidation(
         isInRange(element, 0, 0),
     );
     const queryValidation: boolean[] = [
-        validationWithRegex(name.replace(/ /g, ""), /^[A-Za-zöüÄÖÜß]+$/),
+        validationWithRegex(name.replace(/ /g, ""), /^[A-Za-zöüÄÖÜß-]+$/),
         validationWithRegex(min, /^[0-9]+$/),
         validationWithRegex(max, /^[0-9]+$/),
         validationUUID(id),
