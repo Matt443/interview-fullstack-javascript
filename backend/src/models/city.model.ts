@@ -1,4 +1,4 @@
-import { connectDB } from "../db";
+import { pool } from "../db";
 import { CitySearchQuery } from "../types/api.type";
 import { City } from "../types/city.type";
 import { WhereGeneratorPattern } from "../types/utils.type";
@@ -17,7 +17,6 @@ export default {
     ): Promise<{ rows: City[]; foundAtAll: number }> {
         const { name, uuid, min, max, perPage, page } = cityParams;
         try {
-            const pool = connectDB();
             const queryPattern: WhereGeneratorPattern[] = [
                 {
                     columnName: "LOWER(name)",
@@ -60,7 +59,6 @@ export default {
         });
         const citiesValuesFlat = citiesValues.flat();
         try {
-            const pool = connectDB();
             const result = await pool.query(insertQuery, citiesValuesFlat);
             return result.rowCount || 0;
         } catch (error) {
@@ -72,7 +70,6 @@ export default {
         const newValues: string = `${createSetOfParams(2, 0, ["name=", "count="])}`;
         const query = `UPDATE cities SET ${newValues} WHERE id=$3`;
         try {
-            const pool = connectDB();
             const result = await pool.query(query, [updatedCity.name, updatedCity.count, id]);
             return result.rowCount || 0;
         } catch (error) {
@@ -83,7 +80,6 @@ export default {
     async deleteCity(id: string) {
         const query = `DELETE FROM cities WHERE id=$1`;
         try {
-            const pool = connectDB();
             const result = await pool.query(query, [id]);
             return result.rowCount || 0;
         } catch (error) {
@@ -91,12 +87,21 @@ export default {
             throw error;
         }
     },
-    async getCityAutocomplete(name: string): Promise<string[]> {
+    async getCityAutocomplete(): Promise<string[]> {
         const query = `SELECT (name) FROM cities LIMIT 1000`;
         try {
-            const pool = connectDB();
             const result = await pool.query(query);
             return result.rows.map((element: { name: string }) => element.name);
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    },
+    async createTableIfNotExists() {
+        try {
+            const query =
+                "CREATE TABLE IF NOT EXISTS cities (id TEXT PRIMARY KEY NOT NULL DEFAULT gen_random_uuid(), name VARCHAR(255) NOT NULL UNIQUE, count INT NOT NULL DEFAULT 0)";
+            await pool.query(query);
         } catch (error) {
             console.error(error);
             throw error;

@@ -75,7 +75,7 @@ export default {
     async getAutocomplete(req: Request, res: Response, next: NextFunction) {
         try {
             const name = req.query.name as unknown as string;
-            const dbResponse = await cityModel.getCityAutocomplete(name);
+            const dbResponse = await cityModel.getCityAutocomplete();
             res.send(dbResponse);
         } catch (error) {
             console.log(error);
