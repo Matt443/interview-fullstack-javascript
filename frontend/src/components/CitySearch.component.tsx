@@ -5,6 +5,8 @@ import { RootState } from "../stores/state.store";
 import { Input } from "./Input.component";
 import { setMax, setMin, setSearchedFor } from "../features/stateSlice.feature";
 import CountInput from "./CountInput.component";
+import { preventRefresh } from "../utils/common";
+import { buttonSx } from "../constants/styles.constant";
 
 const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes = "" }) => {
     const dispatch = useDispatch();
@@ -15,12 +17,7 @@ const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes
         <div className={`${classes} search-container w-[100%]`}>
             <form
                 className="items-center lg:items-center flex-col lg:flex-row flex-wrap flex w-[100%]"
-                onKeyDown={async (e) => {
-                    if (e.key === "Enter") {
-                        e.preventDefault();
-                        await searchCallback(inputValue);
-                    }
-                }}
+                onKeyDown={(event) => preventRefresh(event.nativeEvent)}
             >
                 <Input
                     autocomplete={cities}
@@ -31,27 +28,24 @@ const CitySearch: React.FC<CitySearchProps> = ({ searchCallback, cities, classes
                     label={"Count min:"}
                     inputCallback={(value: string) => dispatch(setMin(value))}
                     value={min}
+                    placeholder={"Your min count"}
                 ></CountInput>
                 <CountInput
                     label={"Count max:"}
                     inputCallback={(value: string) => dispatch(setMax(value))}
                     value={max}
+                    placeholder={"Your max count"}
                 ></CountInput>
                 <Button
                     variant="contained"
                     type="button"
                     className="text-sm p-2 h-[40px] mt-2"
-                    sx={{
-                        border: "2px solid var(--color-green-400)",
-                        bgcolor: "var(--color-green-400)",
-                        color: "var(--color-black)",
-                        "&:hover": { bgcolor: "transparent", color: "var(--color-green-400)" },
-                    }}
+                    sx={buttonSx}
                     onClick={async () => {
                         await searchCallback(inputValue);
                     }}
                 >
-                    Update
+                    Search
                 </Button>
             </form>
         </div>

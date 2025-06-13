@@ -8,7 +8,7 @@ export default function Nav() {
                     Admin
                 </Link>
                 <Link to={"/"} className="p-2">
-                    Home
+                    User
                 </Link>
             </ul>
         </nav>

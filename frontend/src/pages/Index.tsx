@@ -6,7 +6,7 @@ export default function Index() {
         <>
             <Nav></Nav>
             <main>
-                <CityPresentation></CityPresentation>
+                <CityPresentation checkboxSelection={false}></CityPresentation>
             </main>
         </>
     );

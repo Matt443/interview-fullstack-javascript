@@ -36,6 +36,10 @@ const tableCSS = {
 const DataTable: React.FC<DataTableProps> = ({ columns, rows, checkboxSelection, children }) => {
     const dispatch = useDispatch();
 
+    async function modelChangeHandler(selection: { type: string; ids: Set<GridRowId> }) {
+        dispatch(setToDelete(Array.from(selection.ids).map(String)));
+        // const response = await getCities()
+    }
     return (
         <>
             <DataGrid
@@ -43,12 +47,7 @@ const DataTable: React.FC<DataTableProps> = ({ columns, rows, checkboxSelection,
                 rows={rows}
                 columns={columns}
                 checkboxSelection={checkboxSelection}
-                onRowSelectionModelChange={async (selection: {
-                    type: string;
-                    ids: Set<GridRowId>;
-                }) => {
-                    dispatch(setToDelete(Array.from(selection.ids).map(String)));
-                }}
+                onRowSelectionModelChange={modelChangeHandler}
             />
             {children}
         </>

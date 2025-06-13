@@ -1,4 +1,5 @@
-import { Button, SelectChangeEvent } from "@mui/material";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { SelectChangeEvent } from "@mui/material";
 import TopBar from "../components/TopBar.component";
 import {
     setAllCities,
@@ -7,7 +8,7 @@ import {
     setPerPage,
     setSearchedCities,
 } from "../features/stateSlice.feature";
-import { deleteCities, getCities } from "../utils/api.util";
+import { getCities } from "../utils/api.util";
 import DataTable from "../components/DataTable.component";
 import Pagination from "../components/Pagination.component";
 import { City } from "../types/models.type";
@@ -16,6 +17,7 @@ import { isInRange } from "../utils/common";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../stores/state.store";
 import { GridColDef } from "@mui/x-data-grid";
+import DeleteCity from "./DeleteCity.component";
 
 const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 300 },
@@ -35,7 +37,6 @@ const CityPresentation: React.FC<CityPresentation> = ({ children, checkboxSelect
     const min = useSelector((state: RootState) => state.data.min);
     const max = useSelector((state: RootState) => state.data.max);
     const page = useSelector((state: RootState) => state.data.page);
-    const toDelete = useSelector((state: RootState) => state.data.toDelete);
 
     const dispatch = useDispatch();
 
@@ -88,16 +89,16 @@ const CityPresentation: React.FC<CityPresentation> = ({ children, checkboxSelect
         };
         fn();
     }
+
+    async function searchHandler(): Promise<void> {
+        const response = await getCities({ name: inputValue, min, max, perPage });
+        dispatch(setSearchedCities(response.rows));
+        dispatch(setPagesQuantity(Math.ceil(response.foundAtAll / perPage)));
+    }
+
     return (
         <>
-            <TopBar
-                searchCallback={async () => {
-                    const response = await getCities({ name: inputValue, min, max, perPage });
-                    dispatch(setSearchedCities(response.rows));
-                    dispatch(setPagesQuantity(Math.ceil(response.foundAtAll / perPage)));
-                }}
-                cities={available}
-            ></TopBar>
+            <TopBar searchCallback={searchHandler} cities={available}></TopBar>
             <DataTable
                 rows={searchedCities}
                 columns={columns}
@@ -116,24 +117,7 @@ const CityPresentation: React.FC<CityPresentation> = ({ children, checkboxSelect
                             changePerPage(Number(event.target.value))
                         }
                     ></Pagination>
-                    <Button
-                        variant="contained"
-                        type="button"
-                        className="text-sm p-2 h-[40px] mt-2"
-                        sx={{
-                            border: "2px solid var(--color-green-400)",
-                            bgcolor: "var(--color-green-400)",
-                            color: "var(--color-black)",
-                            "&:hover": { bgcolor: "transparent", color: "var(--color-green-400)" },
-                        }}
-                        onClick={async () => {
-                            await deleteCities(toDelete);
-                            const response = await getCities({ name: inputValue, min, max });
-                            await dispatch(setSearchedCities(response.rows));
-                        }}
-                    >
-                        Delete selected city
-                    </Button>
+                    <DeleteCity></DeleteCity>
                 </div>
             </DataTable>
             <div className="slot-contanier">{children}</div>

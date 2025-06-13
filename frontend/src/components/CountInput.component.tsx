@@ -2,8 +2,9 @@ interface CountInputProps {
     label: string;
     inputCallback: (value: string) => void;
     value: string;
+    placeholder: string;
 }
-const CountInput: React.FC<CountInputProps> = ({ label, inputCallback, value }) => {
+const CountInput: React.FC<CountInputProps> = ({ label, inputCallback, value, placeholder }) => {
     return (
         <>
             <div className="input-container flex flex-col my-2 lg:flex-row lg:items-center items-start lg:mr-2 w-[100%] lg:max-w-[300px]">
@@ -12,6 +13,7 @@ const CountInput: React.FC<CountInputProps> = ({ label, inputCallback, value }) 
                 </label>
                 <input
                     value={value}
+                    placeholder={placeholder}
                     type="number"
                     min="0"
                     max="999999"

@@ -13,7 +13,7 @@ const counterSlice = createSlice({
         min: "",
         max: "",
         newCityName: "",
-        newCityCount: 0,
+        newCityCount: "",
         addMessage: "",
         toDelete: [],
         searchedForUpdate: "",
@@ -33,7 +33,7 @@ const counterSlice = createSlice({
         min: string;
         max: string;
         newCityName: string;
-        newCityCount: number;
+        newCityCount: string;
         addMessage: string;
         toDelete: string[];
         searchedForUpdate: string;
@@ -72,7 +72,7 @@ const counterSlice = createSlice({
         setNewCityName: (state, action: PayloadAction<string>) => {
             state.newCityName = action.payload;
         },
-        setNewCityCount: (state, action: PayloadAction<number>) => {
+        setNewCityCount: (state, action: PayloadAction<string>) => {
             state.newCityCount = action.payload;
         },
         setAddMessage: (state, action: PayloadAction<string>) => {

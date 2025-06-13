@@ -6,19 +6,25 @@ import {
     setIdUpdate,
     setMessageUpdate,
     setNameUpdate,
+    setSearchedCities,
     setSearchedForUpdate,
 } from "../features/stateSlice.feature";
 import CountInput from "./CountInput.component";
 import { Button } from "@mui/material";
 import { getCities, updateCity } from "../utils/api.util";
+import { buttonSx } from "../constants/styles.constant";
 
 export default function UpdateCity() {
     const inputValue = useSelector((state: RootState) => state.data.searchedForUpdate);
+    const searchedFor = useSelector((state: RootState) => state.data.searchedFor);
     const cities = useSelector((state: RootState) => state.data.available);
     const countUpdate = useSelector((state: RootState) => state.data.update.count);
     const nameUpdate = useSelector((state: RootState) => state.data.update.name);
     const messageUpdate = useSelector((state: RootState) => state.data.update.message);
     const updateId = useSelector((state: RootState) => state.data.update.id);
+    const min = useSelector((state: RootState) => state.data.min);
+    const max = useSelector((state: RootState) => state.data.max);
+
     const dispatch = useDispatch();
 
     async function getCityDetails(): Promise<void> {
@@ -34,8 +40,9 @@ export default function UpdateCity() {
             name: nameUpdate,
             count: Number(countUpdate),
         });
-        console.log(response);
         dispatch(setMessageUpdate(response));
+        const responseGet = await getCities({ name: searchedFor, min, max });
+        dispatch(setSearchedCities(responseGet.rows));
     }
 
     return (
@@ -51,12 +58,7 @@ export default function UpdateCity() {
                     variant="contained"
                     type="button"
                     className="text-sm p-2 h-[40px] mt-2"
-                    sx={{
-                        border: "2px solid var(--color-green-400)",
-                        bgcolor: "var(--color-green-400)",
-                        color: "var(--color-black)",
-                        "&:hover": { bgcolor: "transparent", color: "var(--color-green-400)" },
-                    }}
+                    sx={buttonSx}
                     onClick={getCityDetails}
                 >
                     Get details
@@ -67,6 +69,7 @@ export default function UpdateCity() {
                     </label>
                     <input
                         value={nameUpdate}
+                        placeholder="Your new city name"
                         type="string"
                         id="name"
                         className="border-2 border-green-700 focus:border-green-400 outline-none p-2 rounded-sm text-sm text-white lg:ml-2 w-[100%]"
@@ -79,22 +82,20 @@ export default function UpdateCity() {
                     label={"Count:"}
                     inputCallback={(value: string) => dispatch(setCountUpdate(value))}
                     value={countUpdate}
+                    placeholder={"Your new  count"}
                 ></CountInput>
                 <Button
                     variant="contained"
                     type="button"
                     className="text-sm p-2 h-[40px] mt-2"
-                    sx={{
-                        border: "2px solid var(--color-green-400)",
-                        bgcolor: "var(--color-green-400)",
-                        color: "var(--color-black)",
-                        "&:hover": { bgcolor: "transparent", color: "var(--color-green-400)" },
-                    }}
+                    sx={buttonSx}
                     onClick={updateCityDetails}
                 >
                     Update
                 </Button>
-                <span className="update-message">{messageUpdate}</span>
+                <div className="update-message-container mt-2">
+                    <span className="update-message">{messageUpdate}</span>
+                </div>
             </form>
         </>
     );
