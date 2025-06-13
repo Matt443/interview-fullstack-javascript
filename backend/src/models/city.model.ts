@@ -69,16 +69,11 @@ export default {
         }
     },
     async updateCity(id: string, updatedCity: City): Promise<number> {
-        const newValues: string = `${createSetOfParams(3, 0, ["id=", "name=", "count="])}`;
-        const query = `UPDATE cities SET ${newValues} WHERE id=$4`;
+        const newValues: string = `${createSetOfParams(2, 0, ["name=", "count="])}`;
+        const query = `UPDATE cities SET ${newValues} WHERE id=$3`;
         try {
             const pool = connectDB();
-            const result = await pool.query(query, [
-                updatedCity.uuid,
-                updatedCity.name,
-                updatedCity.count,
-                id,
-            ]);
+            const result = await pool.query(query, [updatedCity.name, updatedCity.count, id]);
             return result.rowCount || 0;
         } catch (error) {
             console.error(error);

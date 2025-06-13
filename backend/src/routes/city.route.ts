@@ -5,13 +5,14 @@ import {
     validateCity,
     validateCityToInsert,
     validateCityToUpdate,
+    validateUUID,
 } from "../middlewares/validation.middleware";
 
 export default () => {
     const api = Router();
     api.get("/cities", validateCity, pagePropsValidation, cityController.getCities);
     api.post("/cities", validateCityToInsert, cityController.insertCities);
-    api.put("/cities", validateCityToUpdate, cityController.updateCity);
-    api.delete("/cities", cityController.deleteCity);
+    api.put("/cities/:id", validateUUID, validateCityToUpdate, cityController.updateCity);
+    api.delete("/cities/:id", validateUUID, cityController.deleteCity);
     return api;
 };

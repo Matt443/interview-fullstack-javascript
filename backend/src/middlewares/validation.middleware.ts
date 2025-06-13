@@ -43,19 +43,13 @@ export async function validateCityToInsert(req: Request, res: Response, next: Ne
 
 export async function validateCityToUpdate(req: Request, res: Response, next: NextFunction) {
     const { name, uuid, count } = req.body.city as unknown as City;
-    const id = req.body.id as unknown as string;
-
-    if (
-        !cityToInsertValidation(name, String(count), uuid) ||
-        !cityFullValidation(name, String(count), uuid) ||
-        !validationUUID(id)
-    )
+    if (!cityToInsertValidation(name, String(count), uuid))
         return sendError(res, 400, "Bad Request");
     next();
 }
 
 export async function validateUUID(req: Request, res: Response, next: NextFunction) {
-    const id = req.query.id as unknown as string;
+    const id = req.params.id as unknown as string;
 
     if (!validationUUID(id)) return sendError(res, 400, "Bad Request");
     next();

@@ -51,8 +51,8 @@ export default {
     async updateCity(req: Request, res: Response, next: NextFunction) {
         try {
             const { name, uuid, count } = req.body.city as unknown as City;
-            const id = req.body.id as unknown as string;
-            const citiesUpdated: number = await cityModel.updateCity(id, { name, uuid, count });
+            const id = req.params.id as unknown as string;
+            const citiesUpdated: number = await cityModel.updateCity(id, { name, uuid: id, count });
             if (!citiesUpdated || citiesUpdated !== 1) {
                 return sendError(res, 422, "Unprocessable Entity");
             }
@@ -64,7 +64,7 @@ export default {
     },
     async deleteCity(req: Request, res: Response, next: NextFunction) {
         try {
-            const id = req.query.id as unknown as string;
+            const id = req.params.id as unknown as string;
             const rowsDeleted = await cityModel.deleteCity(id);
             res.send({ msg: `Sucessfully deleted ${rowsDeleted} rows` });
         } catch (error) {
