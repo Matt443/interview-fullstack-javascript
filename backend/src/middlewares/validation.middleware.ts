@@ -34,16 +34,16 @@ export async function validateCityToInsert(req: Request, res: Response, next: Ne
         return sendError(res, 400, "Bad Request");
 
     const everyOk: boolean = req.body.cities.every((element: City) =>
-        cityToInsertValidation(element.name, String(element.count), element.uuid),
+        cityToInsertValidation(element.name, String(element.count)),
     );
+
     if (!everyOk) return sendError(res, 400, "Bad Request");
     next();
 }
 
 export async function validateCityToUpdate(req: Request, res: Response, next: NextFunction) {
-    const { name, uuid, count } = req.body.city as unknown as City;
-    if (!cityToInsertValidation(name, String(count), uuid))
-        return sendError(res, 400, "Bad Request");
+    const { name, count } = req.body.city as unknown as City;
+    if (!cityToInsertValidation(name, String(count))) return sendError(res, 400, "Bad Request");
     next();
 }
 

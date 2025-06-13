@@ -94,7 +94,7 @@ export function cityValidation(
         isInRange(element, 0, 0),
     );
     const queryValidation: boolean[] = [
-        validationWithRegex(name, /^[A-Za-zöüÄÖÜß]+$/),
+        validationWithRegex(name.replace(/ /g, ""), /^[A-Za-zöüÄÖÜß]+$/),
         validationWithRegex(min, /^[0-9]+$/),
         validationWithRegex(max, /^[0-9]+$/),
         validationUUID(id),
@@ -115,16 +115,15 @@ export function cityValidation(
  * @param {string} id
  * @returns {boolean}
  */
-export function cityToInsertValidation(name: string, count: string, id: string = ""): boolean {
+export function cityToInsertValidation(name: string, count: string): boolean {
     if (!name || !count) return false;
 
     if (
-        id.length === 0 &&
-        validationWithRegex(name, /^[A-Za-zöüÄÖÜß]+$/) &&
+        validationWithRegex(name.replace(/ /g, ""), /^[A-Za-zöüÄÖÜß-]+$/) &&
         validationWithRegex(count, /^[0-9]+$/)
     )
         return true;
-    if (cityFullValidation(name, count, id)) return true;
+    if (cityFullValidation(name, count)) return true;
     return false;
 }
 
@@ -135,12 +134,11 @@ export function cityToInsertValidation(name: string, count: string, id: string =
  * @param {string} id
  * @returns {boolean}
  */
-export function cityFullValidation(name: string, count: string, id: string = ""): boolean {
-    if (!name || !count || !id) return false;
+export function cityFullValidation(name: string, count: string): boolean {
+    if (!name || !count) return false;
     if (
-        !validationWithRegex(name, /^[A-Za-zöüÄÖÜß]+$/) &&
-        !validationWithRegex(count, /^[0-9]+$/) &&
-        !validationUUID(id)
+        !validationWithRegex(name.replace(/ /g, ""), /^[A-Za-zöüÄÖÜß-]+$/) ||
+        !validationWithRegex(count, /^[0-9]+$/)
     )
         return false;
     return true;
